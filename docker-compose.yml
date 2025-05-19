@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: medtrack_app
+    volumes:
+      - ./medtrack:/var/www
+    depends_on:
+      - db
+      - redis
+
+  web:
+    image: nginx:latest
+    container_name: medtrack_nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./medtrack:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: postgres:15
+    container_name: medtrack_db
+    environment:
+      POSTGRES_DB: medtrack
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: medtrack_redis
+    ports:
+      - 6379:6379
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: medtrack_mailhog
+    ports:
+      - 8025:8025
+
+volumes:
+  pgdata:

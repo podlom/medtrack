@@ -1,0 +1,17 @@
+#
+docker/.env
+#
+medtrack/node_modules
+medtrack/public/hot
+medtrack/storage/*.key
+medtrack/vendor
+medtrack/.env
+medtrack/.phpunit.result.cache
+medtrack/npm-debug.log
+medtrack/yarn-error.log
+#
+/.idea
+/.vscode
+#
+.DS_Store
+*.orig
