@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\TreatmentController;
 use App\Http\Controllers\Api\MedicationController;
 use App\Http\Controllers\Api\ReminderController;
+use App\Http\Controllers\Api\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -45,16 +47,14 @@ Route::post('/login', function (Request $request) {
     ]);
 });
 
-Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware('auth:sanctum')->get('/users/me', function (Request $request) {
-    return response()->json($request->user());
-});
+Route::middleware('auth:sanctum')->get('/me', [UserController::class, 'me']);
+Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('treatments', TreatmentController::class);
     Route::apiResource('medications', MedicationController::class);
     Route::apiResource('reminders', ReminderController::class);
 });
+
+Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
